@@ -1,0 +1,15 @@
+.infoBar{
+    display: flex;
+    background-color: rebeccapurple;
+    color: white;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+button{
+    background-color: orangered;
+    color: aliceblue;
+    border: none;
+    padding: 1rem 3rem;
+}
