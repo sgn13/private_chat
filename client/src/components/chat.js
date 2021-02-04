@@ -1,61 +1,65 @@
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
-import queryString from 'query-string'
+import queryString from "query-string";
 import InfoBar from "./Infobar/InfoBar";
 import Input from "./input/input";
-import { Card, Form, Button } from 'react-bootstrap'
+import { Card, Form, Button } from "react-bootstrap";
 import Messages from "./Messages";
 import MesssageBox from "./messageStorage/MesssageBox";
+import { Link } from "react-router-dom";
+import { AuthContext } from "./contextapi/authContext";
 
 let socket;
 
 const Chat = ({ location }) => {
-  const [userID, setUserID] = useState('')
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [room, setRoom] = useState('');
-  const [name, setName] = useState('');
-  const [users, setUsers] = useState()
-  const ENDPOINT = "http://localhost:4000"
-  const [receiveMessage, setReceiveMessage] = useState('sdfsdfasdfsdfsd')
+  const [room, setRoom] = useState("");
+  const [name, setName] = useState("");
+  const [users, setUsers] = useState();
+  const ENDPOINT = "http://localhost:4000";
+  const [receiveMessage, setReceiveMessage] = useState("sdfsdfasdfsdfsd");
 
-  const userValue = location.userProps.user
-  const { fullname, email } = location.userProps
-
+  const userValue = location.userProps.user;
+  const { fullname, email } = location.userProps;
   const handleSubmit = (e) => {
     socket = io.connect(ENDPOINT);
 
     e.preventDefault();
-
-    socket.emit('private', {
+    socket.emit("user_connected");
+    socket.emit("private", {
       to: userValue,
-      message: message
+      message: message,
     });
-  }
+    socket.on("private", (privateData) => {
+      //setReceiveMessage(privateData.message);
+      console.log(privateData, "private");
+    });
+  };
 
   return (
     <div>
       <div className="container mt-5">
         <h4>Chat App</h4>
-        <Card border="secondary" style={{ width: '30rem' }} className="p-3">
+        <Card border="secondary" style={{ width: "30rem" }} className="p-3">
           <Card.Header>{fullname}</Card.Header>
           <Card.Body>
             <MesssageBox />
-
           </Card.Body>
 
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formBasicEmail">
-              <input
-                type="text" placeholder="id" value={userValue} readOnly />
-              <Form.Control type="text" placeholder="Message.." value={message} onChange={(e) => setMessage(e.target.value)} />
-
+              <input type="text" placeholder="id" value={userValue} readOnly />
+              <Form.Control
+                type="text"
+                placeholder="Message.."
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
             </Form.Group>
             <Button variant="primary" type="submit">
               Submit
-  </Button>
-
-
+            </Button>
           </Form>
         </Card>
         {/* <InfoBar room={room} />

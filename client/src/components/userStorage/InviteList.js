@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import Person from "./Person";
+import Invite from "./Invite";
 import { io } from "socket.io-client";
 import { AuthContext } from "../contextapi/authContext";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
+
 let socket;
 
-const UserList = () => {
+const InviteList = () => {
   const [users, setUsers] = useState([]);
   const [receiveMessage, setReceiveMessage] = useState("");
   const [user, setUser] = useContext(AuthContext).uso;
@@ -18,41 +19,45 @@ const UserList = () => {
 
   useEffect(async () => {
     const response = await axios({
-      url: `http://localhost:4000/friends/allfriends/${userID}`,
+      url: "http://localhost:4000/users/",
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
     const datas = response.data;
-    console.log(datas);
     setUsers(datas);
   }, []);
 
   useEffect(() => {
     socket = io.connect(ENDPOINT);
     socket.emit("user_connected", userID);
+    socket.on("private", (privateData) => {
+      setReceiveMessage(privateData.message);
+      console.log(privateData, "userList");
+    });
   }, [ENDPOINT]);
 
   return (
     <div>
+      <h2>All User</h2>
       <Link to="/request">
         <Button variant="primary" type="submit">
           Request
         </Button>
       </Link>
-      <Link to="/inviteList">
+      <Link to="/userList">
         <Button variant="primary" type="submit">
-          All User
+          Friends
         </Button>
       </Link>
-      <h2>Friend List</h2>
       {receiveMessage}
       {users.map((list) => {
-        return <Person list={list} key={list._id} />;
+        console.log(list);
+        return <Invite list={list} key={list._id} />;
       })}
     </div>
   );
 };
 
-export default UserList;
+export default InviteList;

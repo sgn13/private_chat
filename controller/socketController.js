@@ -18,51 +18,62 @@ var connectedUsers = {};
 // }
 // userlist()
 
-
-
 exports.chat = (http) => {
+  const io = require("socket.io")(http, {
+    cors: {
+      origin: "http://localhost:3000",
+      methods: ["GET", "POST"],
+    },
+  });
 
+  io.on("connection", async (socket) => {
+    // const userId = await (socket)
+    console.log(connectedUsers, "connected users list");
 
-    const io = require("socket.io")(http,
-        {
-            cors: {
-                origin: "http://localhost:3000",
-                methods: ["GET", "POST"],
-            },
-        });
-
-
-    io.on("connection", async (socket) => {
-
-
-        // const userId = await (socket)
-        console.log(connectedUsers, "connected users list");
-
-        socket.on('user_connected', function (userID) {
-            socket.userID = userID;
-            connectedUsers[userID] = socket
-            console.log(socket);
-
-        })
-
-        socket.on('private', function (data) {
-            const to = data.to, message = data.message
-            console.log({ to, message });
-
-
-            if (connectedUsers.hasOwnProperty(to)) {
-                connectedUsers[to].emit('private', {
-                    message: message
-                })
-                console.log("yes user is there");
-            }
-            else {
-                console.log("user not found");
-            }
-            // io.emit('private_msg', {
-            //     username: to,
-            //     message: message
-            // })
-        })
+    socket.on("user_connected", function (userID) {
+      socket.userID = userID;
+      connectedUsers[userID] = socket;
+      console.log(socket);
     });
+
+    socket.on("invite", function (data) {
+      const to = data.to;
+      const from = data.from;
+      const name = data.username;
+      console.log(data);
+      if (connectedUsers.hasOwnProperty(to)) {
+        connectedUsers[to].emit("invite", {
+          message: `${name} has send friend request,id:${from}`,
+          sender_id: from,
+          sender_name: name,
+        });
+        console.log("Invitation send");
+      } else {
+        console.log("user not found");
+      }
+      // socke
+    });
+
+    socket.on("private", function (data) {
+      const to = data.to,
+        message = data.message;
+      console.log({ to, message });
+
+      if (connectedUsers.hasOwnProperty(to)) {
+        connectedUsers[to].emit("private", {
+          message: message,
+        });
+        console.log("yes user is there");
+      } else {
+        console.log("user not found");
+      }
+      // socket.on("notification",data{
+
+      // })
+      // io.emit('private_msg', {
+      //     username: to,
+      //     message: message
+      // })
+    });
+  });
 };
