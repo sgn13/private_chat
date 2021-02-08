@@ -11,28 +11,26 @@ const Request = () => {
   const [user, setUser] = useContext(AuthContext).uso;
   const [senderID, setsenderID] = useState([]);
   const [name, setName] = useState([]);
+  const [accept, setAccept] = useState(false);
   const userID = user.user.id;
   const ENDPOINT = "http://localhost:4000";
   const handleClick = () => {
     console.log(name);
     axios
       .post(`http://localhost:4000/friends/invitetrue/${userID}`)
-      .then(
-        axios({
-          url: `http://localhost:4000/friends/invite/${senderID}`,
-          method: "POST",
-          data: {
-            user_id: `${userID}`,
-            username: `${name}`,
-          },
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-      )
       .then(axios.post(`http://localhost:4000/friends/invitetrue/${senderID}`));
-  };
 
+    // .then(axios.post(`http://localhost:4000/friends/invitetrue/${senderID}`));
+  };
+  // useEffect(() => {
+  //   console.log("rerender");
+  //   axios.post(`http://localhost:4000/friends/invitetrue/${senderID}`);
+  // }, [accept]);
+  useEffect(() => {
+    console.log("frequest");
+    if (accept)
+      axios.post(`http://localhost:4000/friends/invitetrue/${senderID}`);
+  }, [accept]);
   useEffect(() => {
     console.log("useeffect");
     socket = io.connect(ENDPOINT);

@@ -29,6 +29,17 @@ const Invite = ({ list }) => {
         "Content-Type": "application/json",
       },
     });
+    axios({
+      url: `http://localhost:4000/friends/invite/${userID}`,
+      method: "POST",
+      data: {
+        user_id: `${_id}`,
+        username: `${userName}`,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     console.log("clicked");
 
     socket = io.connect(ENDPOINT);

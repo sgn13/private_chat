@@ -2,7 +2,7 @@ const Friend = require("../models/friendModel");
 
 exports.invite = async (req, res) => {
   try {
-    console.log(req.body.user_id, "bafhb");
+    console.log(req.body.user_id, "invite");
     const f_id = req.params.id;
     const user_id = req.body.user_id;
     const f_name = req.body.username;
@@ -18,6 +18,7 @@ exports.invite = async (req, res) => {
 };
 
 exports.invitetrue = async (req, res) => {
+  console.log(req.params.id, "invitetrue");
   try {
     const filter = { f_id: req.params.id };
     const update = { f_accept: true };
