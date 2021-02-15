@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { ListGroup, Modal, Button } from 'react-bootstrap'
+import React from 'react'
+import { ListGroup } from 'react-bootstrap'
 
 const TextContainer = ({ users, active }) => {
     return (

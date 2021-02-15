@@ -10,10 +10,9 @@ let socket;
 const UserList = () => {
     const [users, setUsers] = useState([])
     const [receiveMessage, setReceiveMessage] = useState('')
+    const [messages, setMessages] = useState([]);
     const [user, setUser] = useContext(AuthContext).uso;
-
     const userID = user.user.id
-
     const ENDPOINT = "http://localhost:4000"
 
     useEffect(async () => {
@@ -32,20 +31,34 @@ const UserList = () => {
     useEffect(() => {
         socket = io.connect(ENDPOINT);
         socket.emit('user_connected', userID)
-        socket.on('private', (privateData) => {
-            setReceiveMessage(privateData.message)
-            console.log(privateData, "userList");
-        })
-
+        // socket.on('private_receive', (privateData) => {
+        //     setReceiveMessage(privateData.message)
+        //     console.log(privateData, "userList");
+        // })
     }, [ENDPOINT]);
+    console.log(messages);
+
+    useEffect(() => {
+        socket.on('private_receive', (privateData) => {
+            setReceiveMessage(privateData.message)
+            socket.on('private_receive', (privateData) => {
+                const message = privateData.message
+                setMessages(messages => [...messages, message])
+            })
+        })
+    }, [messages])
 
     return (
         <div>
-
-            {receiveMessage}
+            {messages.map((list) => {
+                return (
+                    <p>{list} hello</p>
+                )
+            })}
+            <h1 className="text-center" style={{ color: 'green' }}>{user.user.fullname}</h1>
             {users.map((list) => {
                 return (
-                    <Person list={list} key={list._id} />
+                    <Person key={list._id} {...list} pm={messages} userID={userID} />
                 )
             })}
         </div>

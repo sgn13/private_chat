@@ -1,24 +1,11 @@
-// const User = require('../models/userModel')
+const User = require('../models/userModel')
+const Message = require('../models/messageModel')
 
 // const onlineList = User.find();
 // User.find()
 //     .then(user => console.log(user))
 
 var connectedUsers = {};
-// userlist = async () => {
-//     const onlineList = await User.find();
-
-//     // console.log(connectedUsers, "onlsndfkdsfb");
-//     onlineList.forEach(element => {
-//         connectedUsers[element._id]
-//         console.log(element);
-
-//         connectedUsers[element.fullname]
-//     });
-// }
-// userlist()
-
-
 
 exports.chat = (http) => {
 
@@ -34,24 +21,37 @@ exports.chat = (http) => {
 
     io.on("connection", async (socket) => {
 
-
         // const userId = await (socket)
-        console.log(connectedUsers, "connected users list");
+        userlist = async () => {
+            const onlineList = await User.find();
+            onlineList.forEach(element => {
+                socket.userID = element._id;
+                connectedUsers[element._id] = socket
+                console.log(socket);
+
+            });
+        }
+
+        // userlist()
 
         socket.on('user_connected', function (userID) {
             socket.userID = userID;
             connectedUsers[userID] = socket
-            console.log(socket);
-
         })
 
         socket.on('private', function (data) {
-            const to = data.to, message = data.message
-            console.log({ to, message });
 
+            const from = data.from, to = data.to, message = data.message
+            // const newMessage = new Message({
+            //     from: from,
+            //     to: to,
+            //     message: message
+            // })
+            // newMessage.save()
 
             if (connectedUsers.hasOwnProperty(to)) {
-                connectedUsers[to].emit('private', {
+                connectedUsers[to].emit('private_receive', {
+                    to: to,
                     message: message
                 })
                 console.log("yes user is there");
@@ -59,10 +59,7 @@ exports.chat = (http) => {
             else {
                 console.log("user not found");
             }
-            // io.emit('private_msg', {
-            //     username: to,
-            //     message: message
-            // })
+
         })
     });
 };

@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios'
-import { Form, Button, Alert, Modal } from 'react-bootstrap'
+import { Form, Button, Alert } from 'react-bootstrap'
 import { AuthContext } from '../components/contextapi/authContext';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const Login = () => {
 

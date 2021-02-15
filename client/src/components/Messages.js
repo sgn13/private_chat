@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Modal, Form, Button, Card } from 'react-bootstrap'
+import { Modal, Form, Card } from 'react-bootstrap'
 import Message from './Message'
 import TextContainer from './textcontainer/TextContainer'
 import axios from 'axios'
