@@ -49,9 +49,21 @@ exports.pending = async (req, res) => {
   try {
     const pending = await Friend.find({
       f_accept: false,
-      user_id: req.body.user_id,
+      user_id: req.params.id,
     });
     res.json(pending);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+exports.delete = async (req, res) => {
+  try {
+    console.log(req.body.id);
+    const del = await Friend.findOneAndDelete({
+      user_id: req.body.id,
+    });
+    res.json(del);
   } catch (err) {
     res.status(500).json(err);
   }

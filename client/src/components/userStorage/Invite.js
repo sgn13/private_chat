@@ -42,13 +42,13 @@ const Invite = ({ list }) => {
     });
     console.log("clicked");
 
-    socket = io.connect(ENDPOINT);
-    e.preventDefault();
-    socket.emit("invite", {
-      to: _id,
-      from: userID,
-      username: userName,
-    });
+    // socket = io.connect(ENDPOINT);
+    // e.preventDefault();
+    // socket.emit("invite", {
+    //   to: _id,
+    //   from: userID,
+    //   username: userName,
+    // });
   };
   return (
     <div className="container">

@@ -35,18 +35,8 @@ const UserList = () => {
   }, [ENDPOINT]);
 
   return (
-    <div>
-      <Link to="/request">
-        <Button variant="primary" type="submit">
-          Request
-        </Button>
-      </Link>
-      <Link to="/inviteList">
-        <Button variant="primary" type="submit">
-          All User
-        </Button>
-      </Link>
-      <h2>Friend List</h2>
+    <div className="container my-4">
+      <h4>Friend List</h4>
       {receiveMessage}
       {users.map((list) => {
         return <Person list={list} key={list._id} />;
